@@ -23,6 +23,11 @@ namespace AOTMapper
         public override ImmutableArray<string> FixableDiagnosticIds 
             => ImmutableArray.Create(AOTMapperAnalyzer.AOTMapperIsNotReady);
 
+        public override FixAllProvider GetFixAllProvider()
+        {
+            return WellKnownFixAllProviders.BatchFixer;
+        }
+
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var diagnostic = context.Diagnostics.First();

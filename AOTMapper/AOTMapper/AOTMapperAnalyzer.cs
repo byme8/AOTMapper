@@ -13,8 +13,9 @@ namespace AOTMapper
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AOTMapperAnalyzer : DiagnosticAnalyzer
     {
+        private const string CoreAssemblyName = "AOTMapper.Core";
+
         public const string AOTMapperIsNotReady = "AOTMapperIsNotReady";
-        public const string AOTMapperUpdate = "AOTMapperUpdate";
 
         public static DiagnosticDescriptor AOTMapperIsNotReadyDescriptor = new DiagnosticDescriptor(
                    AOTMapperIsNotReady,
@@ -24,15 +25,6 @@ namespace AOTMapper
                    DiagnosticSeverity.Error,
                    isEnabledByDefault: true,
                    "Mapper is not ready.");
-
-        public static DiagnosticDescriptor AOTMapperUpdateDescriptor = new DiagnosticDescriptor(
-                AOTMapperUpdate,
-                "Mapper update.",
-                "Mapper update.",
-                "Codegen",
-                DiagnosticSeverity.Info,
-                isEnabledByDefault: true,
-                "Mapper update.");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics 
             => ImmutableArray.Create(AOTMapperIsNotReadyDescriptor);
@@ -52,6 +44,12 @@ namespace AOTMapper
                 genericNameSyntax.Identifier.ValueText == "MapTo")
             {
                 var semanticModel = context.Compilation.GetSemanticModel(syntax.SyntaxTree);
+                var methodInformation = semanticModel.GetSymbolInfo(genericNameSyntax);
+                if (methodInformation.Symbol.ContainingAssembly.Name != CoreAssemblyName)
+                {
+                    return;
+                }
+
                 var fromTypeInfo = semanticModel.GetTypeInfo(identifireSyntax);
                 var fromTypeName = fromTypeInfo.Type.ToDisplayString();
 

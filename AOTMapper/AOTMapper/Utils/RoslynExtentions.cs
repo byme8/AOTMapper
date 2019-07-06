@@ -40,17 +40,17 @@ namespace AOTMapper.Utils
 
         public static IEnumerable<ISymbol> GetAllMembers(this INamedTypeSymbol symbol)
         {
-            foreach (var member in symbol.GetMembers())
-            {
-                yield return member;
-            }
-
             if (symbol.BaseType != null)
             {
                 foreach (var member in symbol.BaseType.GetAllMembers())
                 {
                     yield return member;
                 }
+            }
+
+            foreach (var member in symbol.GetMembers())
+            {
+                yield return member;
             }
         }
 

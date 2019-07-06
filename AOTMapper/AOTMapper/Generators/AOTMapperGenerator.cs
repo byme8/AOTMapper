@@ -29,7 +29,7 @@ namespace AOTMapper.Core.Generators
                 var source = this.GenerateMapper(fromSymbol, toSymbol);
 
                 this.Project = this.Project
-                    .AddDocument(fromSymbol.ToDisplayString().Replace(".", "") + ".g.cs", source)
+                    .AddDocument(fromSymbol.ToDisplayString().Replace(".", "") + ".cs", source)
                     .WithFolders(outputNamespace)
                     .Project;
             }
@@ -37,12 +37,12 @@ namespace AOTMapper.Core.Generators
 
         private string GenerateMapper(INamedTypeSymbol fromSymbol, INamedTypeSymbol toSymbol)
         {
-            var fromProperties = fromSymbol.GetMembers()
+            var fromProperties = fromSymbol.GetAllMembers()
                 .OfType<IPropertySymbol>()
                 .Where(o => (o.DeclaredAccessibility & Accessibility.Public) > 0)
                 .ToDictionary(o => o.Name, o => o.Type);
 
-            var toProperties = toSymbol.GetMembers()
+            var toProperties = toSymbol.GetAllMembers()
                 .OfType<IPropertySymbol>()
                 .Where(o => (o.DeclaredAccessibility & Accessibility.Public) > 0)
                 .ToDictionary(o => o.Name, o => o.Type);

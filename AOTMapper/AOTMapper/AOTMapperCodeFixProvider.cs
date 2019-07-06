@@ -51,9 +51,9 @@ namespace AOTMapper
             generator.GenerateMappers(pairs, new[] { "AOTMapper", "Mappers" });
 
             var newProject = generator.Project;
-            var oldDocumentInNewProject = newProject.GetDocument(document.Id);
+            var documentInNewProject = newProject.GetDocument(document.Id);
 
-            return oldDocumentInNewProject.WithSyntaxRoot(root);
+            return documentInNewProject.WithSyntaxRoot(root);
         }
     }
 }

@@ -57,7 +57,8 @@ public static class {fromSymbol.ToDisplayString().Replace(".", "")}Extentions
     .Where(o => fromProperties.TryGetValue(o.Key, out var type) && type == o.Value)
     .Select(o => $"        output.{o.Key} = input.{o.Key};" )
     .JoinWithNewLine()
-}{ toProperties
+}
+{ toProperties
     .Where(o => !fromProperties.ContainsKey(o.Key))
     .Select(o => $"        output.{o.Key} = ; // missing property")
     .JoinWithNewLine()

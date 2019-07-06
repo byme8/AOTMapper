@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AOTMapper", "AOTMapper\AOTMapper\AOTMapper.csproj", "{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AOTMapper.Vsix", "AOTMapper\AOTMapper.Vsix\AOTMapper.Vsix.csproj", "{50033746-91FD-43C5-B69F-02CB347434DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AOTMapper.Core", "AOTMapper.Core\AOTMapper.Core.csproj", "{15546505-E272-4CAC-9396-D2344FDEB00D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50033746-91FD-43C5-B69F-02CB347434DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50033746-91FD-43C5-B69F-02CB347434DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50033746-91FD-43C5-B69F-02CB347434DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50033746-91FD-43C5-B69F-02CB347434DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15546505-E272-4CAC-9396-D2344FDEB00D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15546505-E272-4CAC-9396-D2344FDEB00D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15546505-E272-4CAC-9396-D2344FDEB00D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15546505-E272-4CAC-9396-D2344FDEB00D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E35F647-E6F1-4271-A8C7-1991F41E6209}
+	EndGlobalSection
+EndGlobal

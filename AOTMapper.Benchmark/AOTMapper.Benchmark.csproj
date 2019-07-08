@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AOTMapper" Version="1.0.0" />
     <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
   </ItemGroup>

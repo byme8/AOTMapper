@@ -1,5 +1,8 @@
-﻿using AOTMapper.Benchmark.Data;
+﻿using System;
+using AOTMapper.Benchmark.Data;
 using AutoMapper;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Toolchains.InProcess;
 
 namespace AOTMapper.Benchmark
 {
@@ -14,9 +17,10 @@ namespace AOTMapper.Benchmark
         {
             var configuration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<User, UserEntity>();
+                cfg.CreateMap<User, UserEntity>()
+                    .ForMember(o => o.Id, o => o.MapFrom((entity, user) => Guid.Empty));
                 cfg.CreateMap<UserEntity, User>()
-                    .AfterMap((entity, user) => user.Name = $"{entity.FirstName} {entity.LastName}");
+                    .ForMember(o => o.Name, o => o.MapFrom((entity, user) => user.Name = $"{entity.FirstName} {entity.LastName}"));
             });
 
             configuration.AssertConfigurationIsValid();
@@ -26,14 +30,30 @@ namespace AOTMapper.Benchmark
             this.User = this.mapper.Map<User>(this.UserEntity);
         }
 
+        [Benchmark]
         public void AutoMapperToUserEntity()
         {
             var userEntity = this.mapper.Map<UserEntity>(this.User);
         }
 
+        [Benchmark]
         public void AutoMapperToUser()
         {
-            var userEntity = this.mapper.Map<User>(this.User);
+            var user = this.mapper.Map<User>(this.UserEntity);
+        }
+
+        [Benchmark]
+        public void AOTMapperToUser()
+        {
+            var userEntity1 = this.UserEntity;
+            var user = userEntity1.MapToUser();
+        }
+
+        [Benchmark]
+        public void AOTMapperToUserEntity()
+        {
+            var user1 = this.User;
+            var user = user1.MapToUserEntity();
         }
     }
 }

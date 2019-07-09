@@ -39,7 +39,6 @@ namespace AOTMapper
             var syntax = context.Operation.Syntax;
             if (syntax is InvocationExpressionSyntax invocationSytax &&
                 invocationSytax.Expression is MemberAccessExpressionSyntax memberAccessSyntax &&
-                memberAccessSyntax.Expression is IdentifierNameSyntax identifireSyntax &&
                 syntax.DescendantNodes().OfType<GenericNameSyntax>().FirstOrDefault() is GenericNameSyntax genericNameSyntax &&
                 genericNameSyntax.Identifier.ValueText == "MapTo")
             {
@@ -50,7 +49,7 @@ namespace AOTMapper
                     return;
                 }
 
-                var fromTypeInfo = semanticModel.GetTypeInfo(identifireSyntax);
+                var fromTypeInfo = semanticModel.GetTypeInfo(memberAccessSyntax.Expression);
                 var fromTypeName = fromTypeInfo.Type.ToDisplayString();
 
                 var typeSyntax = genericNameSyntax.TypeArgumentList.Arguments.First();

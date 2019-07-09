@@ -11,7 +11,9 @@ rm -r ./nugets
 dotnet pack -o ./../../nugets ./AOTMapper/AOTMapper/AOTMapper.csproj
 dotnet pack -o ./../nugets ./AOTMapper.Core/AOTMapper.Core.csproj
 
-$files = [Directory]::GetFiles("./nugets")
-foreach ($file in $files) {
-    dotnet nuget push $file -k $nugetToken -s https://api.nuget.org/v3/index.json
+if (($args.Count -gt 0) -and ($args.Contains("--publish"))) {
+    $files = [Directory]::GetFiles("./nugets")
+    foreach ($file in $files) {
+        dotnet nuget push $file -k $nugetToken -s https://api.nuget.org/v3/index.json
+    }
 }

@@ -25,19 +25,21 @@ namespace AOTMapper.Core.Generators
             {
                 var fromSymbol = this.Compilation.GetTypeByMetadataName(value.Key);
                 var toSymbol = this.Compilation.GetTypeByMetadataName(value.Value);
-
-                var source = this.GenerateMapper(fromSymbol, toSymbol);
-
                 var fromSymbolName = fromSymbol.ToDisplayString().Replace(".", "");
                 var toSymbolName = toSymbol.ToDisplayString().Replace(".", "");
+                var fileName = $"{fromSymbolName}_To_{toSymbolName}";
+
+                var source = this.GenerateMapper(fromSymbol, toSymbol, fileName);
+
+                
                 this.Project = this.Project
-                    .AddDocument($"{fromSymbolName}_To_{toSymbolName}.cs", source)
+                    .AddDocument($"{fileName}.cs", source)
                     .WithFolders(outputNamespace)
                     .Project;
             }
         }
 
-        private string GenerateMapper(INamedTypeSymbol fromSymbol, INamedTypeSymbol toSymbol)
+        private string GenerateMapper(INamedTypeSymbol fromSymbol, INamedTypeSymbol toSymbol, string fileName)
         {
             var fromProperties = fromSymbol.GetAllMembers()
                 .OfType<IPropertySymbol>()
@@ -50,7 +52,7 @@ namespace AOTMapper.Core.Generators
                 .ToDictionary(o => o.Name, o => o.Type);
 
             return $@"
-public static class {fromSymbol.ToDisplayString().Replace(".", "")}Extentions 
+public static class {fileName}Extentions 
 {{
     public static {toSymbol.ToDisplayString()} MapTo{toSymbol.ToDisplayString().Split('.').Last()}(this {fromSymbol.ToDisplayString()} input)
     {{

@@ -28,8 +28,10 @@ namespace AOTMapper.Core.Generators
 
                 var source = this.GenerateMapper(fromSymbol, toSymbol);
 
+                var fromSymbolName = fromSymbol.ToDisplayString().Replace(".", "");
+                var toSymbolName = toSymbol.ToDisplayString().Replace(".", "");
                 this.Project = this.Project
-                    .AddDocument(fromSymbol.ToDisplayString().Replace(".", "") + ".cs", source)
+                    .AddDocument($"{fromSymbolName}_To_{toSymbolName}.cs", source)
                     .WithFolders(outputNamespace)
                     .Project;
             }
@@ -59,7 +61,7 @@ public static class {fromSymbol.ToDisplayString().Replace(".", "")}Extentions
     .JoinWithNewLine()
 }
 { toProperties
-    .Where(o => !fromProperties.ContainsKey(o.Key))
+    .Where(o => !fromProperties.TryGetValue(o.Key, out var type) || type != o.Value)
     .Select(o => $"        output.{o.Key} = ; // missing property")
     .JoinWithNewLine()
 }

@@ -1,18 +1,27 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AOTMapper.Benchmark.Data
 {
-    public class Entity
+    public class UserEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-    }
+        public UserEntity()
+        {
 
-    public class UserEntity : Entity
-    {
-        public string FirstName { get; set; } = Guid.NewGuid().ToString();
-        public string LastName { get; set; } = Guid.NewGuid().ToString();
+        }
+
+        public UserEntity(Guid id, string firstName, string lastName)
+        {
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+        }
+
+        public Guid Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; } 
     }
 
     public class User

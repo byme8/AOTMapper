@@ -6,6 +6,7 @@ using BenchmarkDotNet.Toolchains.InProcess;
 
 namespace AOTMapper.Benchmark
 {
+    [MemoryDiagnoser]
     public class AOTMapperVSAutoMapper
     {
         private IMapper mapper;
@@ -26,7 +27,7 @@ namespace AOTMapper.Benchmark
             configuration.AssertConfigurationIsValid();
             this.mapper = configuration.CreateMapper();
 
-            this.UserEntity = new UserEntity();
+            this.UserEntity = new UserEntity(Guid.Empty, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
             this.User = this.mapper.Map<User>(this.UserEntity);
         }
 
@@ -34,6 +35,12 @@ namespace AOTMapper.Benchmark
         public void AutoMapperToUserEntity()
         {
             var userEntity = this.mapper.Map<UserEntity>(this.User);
+        }
+
+        [Benchmark]
+        public void AOTMapperToUserEntity()
+        {
+            var user = this.User.MapToUserEntity();
         }
 
         [Benchmark]
@@ -45,15 +52,7 @@ namespace AOTMapper.Benchmark
         [Benchmark]
         public void AOTMapperToUser()
         {
-            var userEntity1 = this.UserEntity;
-            var user = userEntity1.MapToUser();
-        }
-
-        [Benchmark]
-        public void AOTMapperToUserEntity()
-        {
-            var user1 = this.User;
-            var user = user1.MapToUserEntity();
+            var user = this.UserEntity.MapToUser();
         }
     }
 }

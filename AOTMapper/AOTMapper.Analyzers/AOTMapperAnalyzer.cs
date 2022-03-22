@@ -13,7 +13,7 @@ namespace AOTMapper
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AOTMapperAnalyzer : DiagnosticAnalyzer
     {
-        private const string CoreAssemblyName = "AOTMapper.Core";
+        private const string CoreAssemblyName = "AOTMapper.Analyzers.Core";
 
         public const string AOTMapperIsNotReady = "AOTMapperIsNotReady";
 

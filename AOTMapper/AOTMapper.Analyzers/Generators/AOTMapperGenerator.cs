@@ -58,12 +58,12 @@ public static class {fileName}Extentions
     {{
         var output = new {toSymbol.ToDisplayString()}();
 { toProperties
-    .Where(o => fromProperties.TryGetValue(o.Key, out var type) && type == o.Value)
+    .Where(o => fromProperties.TryGetValue(o.Key, out var type) && type.Equals(o.Value))
     .Select(o => $"        output.{o.Key} = input.{o.Key};" )
     .JoinWithNewLine()
 }
 { toProperties
-    .Where(o => !fromProperties.TryGetValue(o.Key, out var type) || type != o.Value)
+    .Where(o => !fromProperties.TryGetValue(o.Key, out var type) || !type.Equals(o.Value))
     .Select(o => $"        output.{o.Key} = ; // missing property")
     .JoinWithNewLine()
 }

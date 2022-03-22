@@ -53,7 +53,7 @@ namespace AOTMapper
                 .Add(fromTypeName, toTypeName);
 
             var generator = new AOTMapperGenerator(document.Project, semanticModel.Compilation);
-            generator.GenerateMappers(pairs, new[] { "AOTMapper", "Mappers" });
+            generator.GenerateMappers(pairs, new[] { "AOTMapper.Analyzers", "Mappers" });
 
             var newProject = generator.Project;
             var documentInNewProject = newProject.GetDocument(document.Id);

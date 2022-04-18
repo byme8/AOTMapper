@@ -7,4 +7,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\AOTMapper.Core\AOTMapper.Core.csproj" />
+      <ProjectReference Include="..\AOTMapper\AOTMapper.Analyzers\AOTMapper.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
 </Project>

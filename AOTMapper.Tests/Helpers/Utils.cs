@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
@@ -16,13 +20,29 @@ public static class Utils
         var diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
         return diagnostics;
     }
-    
-    public static async Task<Project> Replace(this Project project, string oldText, string newText)
+
+    public static async Task<Project> ApplyCodeFix(this Project project, Diagnostic diagnostic, CodeFixProvider fix)
+    {
+        var document = project.Solution.GetDocument(diagnostic.Location.SourceTree);
+        var actions = new List<CodeAction>();
+        var context = new CodeFixContext(document, diagnostic, (a, d) => actions.Add(a), CancellationToken.None);
+
+        await fix.RegisterCodeFixesAsync(context);
+
+        var operations = await actions.First().GetOperationsAsync(CancellationToken.None);
+        var changeSolution = operations.OfType<ApplyChangesOperation>().First().ChangedSolution;
+        var newProject = changeSolution.Projects.First();
+
+        return newProject;
+    }
+
+    public static async Task<Project> Replace(this Project project, params (string OldText, string NewText)[] changes)
     {
         var document = project.Documents.Single(d => d.Name == "Program.cs");
         var textAsync = await document.GetTextAsync();
-        var replacedText = textAsync.ToString().Replace(oldText, newText);
-        var newDocument = document.WithText(SourceText.From(replacedText));
+        var text = textAsync.ToString();
+        var newText = changes.Aggregate(text, (current, change) => current.Replace(change.OldText, change.NewText));
+        var newDocument = document.WithText(SourceText.From(newText));
 
         return newDocument.Project;
     }

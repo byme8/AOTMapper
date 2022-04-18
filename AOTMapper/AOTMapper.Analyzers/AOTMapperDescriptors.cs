@@ -12,6 +12,15 @@ namespace AOTMapper
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             "You need to fill all properties before return the value.");
+        
+        public static DiagnosticDescriptor ReturnOfOutputIsMissing = new DiagnosticDescriptor(
+            nameof(ReturnOfOutputIsMissing),
+            "Not all output properties are mapped",
+            "The return statement is missing",
+            "AOTMapper",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            "You need to return a value.");
 
     }
 }

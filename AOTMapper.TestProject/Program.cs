@@ -1,5 +1,4 @@
-﻿
-using AOTMapper.Core;
+﻿using AOTMapper.Core;
 
 namespace AOTMapper.TestProject;
 
@@ -17,10 +16,10 @@ public static class Mapper
     public static UserEntity MapUserToUserEntity(this User input)
     {
         var output = new UserEntity();
-        
+
         output.FirstName = input.FirstName;
         output.LastName = input.LastName;
-        
+
         return output;
     }
 }

@@ -23,10 +23,7 @@ public class AnalyzerTest
     public async Task ReturnIsMissing()
     {
         var project = await TestProject.Project
-            .Replace(
-                ("output.LastName = input.LastName;", ""),
-                ("return output;", "")
-            );
+            .Replace(("output", "result"));
 
         var diagnostics = await project.ApplyAnalyzers(new OutputPropertiesAnalyzer());
 

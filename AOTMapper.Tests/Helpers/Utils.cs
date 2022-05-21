@@ -17,7 +17,7 @@ public static class Utils
     {
         var compilation = await project.GetCompilationAsync();
         var compilationWithAnalyzers = compilation!.WithAnalyzers(ImmutableArray.Create(analyzers));
-        var diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
+        var diagnostics = await compilationWithAnalyzers.GetAllDiagnosticsAsync();
         return diagnostics;
     }
 

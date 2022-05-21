@@ -15,12 +15,12 @@ namespace AOTMapper
         
         public static DiagnosticDescriptor ReturnOfOutputIsMissing = new DiagnosticDescriptor(
             nameof(ReturnOfOutputIsMissing),
-            "Not all output properties are mapped",
-            "The return statement is missing",
+            "Return the output variable",
+            "The return statement has to return variable with name 'output'",
             "AOTMapper",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            "You need to return a value.");
+            "You need to return a proper variable.");
 
     }
 }

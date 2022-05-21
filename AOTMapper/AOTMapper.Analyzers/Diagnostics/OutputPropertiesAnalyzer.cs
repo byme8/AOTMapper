@@ -61,41 +61,39 @@ namespace AOTMapper.Diagnostics
                 .Where(p => !memberAssignments.Contains(p.Name))
                 .ToArray();
 
-            if (!missingProperties.Any())
+            if (missingProperties.Any())
             {
-                return;
-            }
+                var missingPropertiesString = string.Join(Spliter, missingProperties.Select(p => p.Name));
+                var diagnosticProperties = new Dictionary<string, string>
+                    {
+                        { MissingProperties, missingPropertiesString }
+                    }
+                    .ToImmutableDictionary();
 
-            var missingPropertiesString = string.Join(Spliter, missingProperties.Select(p => p.Name));
-            var returnStatement = method.DescendantNodes()
-                .OfType<ReturnStatementSyntax>()
-                .LastOrDefault();
-
-            var diagnosticProperties = new Dictionary<string, string>
-                {
-                    { MissingProperties, missingPropertiesString }
-                }
-                .ToImmutableDictionary();
-
-            if (returnStatement != null)
-            {
                 var diagnosticOnReturn = Diagnostic.Create(
                     AOTMapperDescriptors.NotAllOutputValuesAreMapped,
-                    returnStatement.GetLocation(),
+                    method.Identifier.GetLocation(),
                     properties: diagnosticProperties,
                     missingPropertiesString);
 
                 context.ReportDiagnostic(diagnosticOnReturn);
-                return;
             }
 
-            var diagnostic = Diagnostic.Create(
-                AOTMapperDescriptors.ReturnOfOutputIsMissing,
-                method.Identifier.GetLocation(),
-                properties: diagnosticProperties,
-                missingPropertiesString);
+            var returnStatement = method.DescendantNodes()
+                .OfType<ReturnStatementSyntax>()
+                .LastOrDefault();
 
-            context.ReportDiagnostic(diagnostic);
+            if (returnStatement != null)
+            {
+                if (returnStatement.Expression?.ToString() != "output")
+                {
+                    var diagnostic = Diagnostic.Create(
+                        AOTMapperDescriptors.ReturnOfOutputIsMissing,
+                        method.Identifier.GetLocation());
+
+                    context.ReportDiagnostic(diagnostic);
+                }
+            }
         }
     }
 }

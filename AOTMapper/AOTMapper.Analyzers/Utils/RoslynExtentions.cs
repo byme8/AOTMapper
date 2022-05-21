@@ -38,7 +38,7 @@ namespace AOTMapper.Utils
                 .ToArray();
         }
 
-        public static IEnumerable<ISymbol> GetAllMembers(this INamedTypeSymbol symbol)
+        public static IEnumerable<ISymbol> GetAllMembers(this ITypeSymbol symbol)
         {
             if (symbol.BaseType != null)
             {
@@ -52,6 +52,14 @@ namespace AOTMapper.Utils
             {
                 yield return member;
             }
+        }
+
+        public static IEnumerable<IPropertySymbol> GetAllPublicProperties(this ITypeSymbol symbol)
+        {
+            return symbol
+                .GetAllMembers()
+                .Where(o => o.Kind == SymbolKind.Property && o.DeclaredAccessibility.HasFlag(Accessibility.Public))
+                .OfType<IPropertySymbol>();
         }
 
         public static TValue Cast<TValue>(this object value)

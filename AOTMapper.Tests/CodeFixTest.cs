@@ -4,6 +4,7 @@ using AOTMapper.CodeFixes;
 using AOTMapper.Diagnostics;
 using AOTMapper.Tests.Helpers;
 using FluentAssertions;
+using Microsoft.CodeAnalysis;
 using Xunit;
 
 namespace AOTMapper.Tests;
@@ -22,11 +23,11 @@ public class CodeFixTest
         var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFixProvider());
 
          diagnostics =  await newProject.ApplyAnalyzers(new OutputPropertiesAnalyzer());
-         
+
          diagnostics
-             .Where(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id)
-             .Should()
-             .BeEmpty();
+             .Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);
+         diagnostics
+             .Should().NotContain(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
     }
 
 }

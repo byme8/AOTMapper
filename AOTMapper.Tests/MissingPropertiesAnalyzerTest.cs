@@ -9,14 +9,27 @@ namespace AOTMapper.Tests;
 public class MissingPropertiesAnalyzerTest
 {
     [Fact]
-    public async Task OneOfPropertiesIsNotAssigned()
+    public async Task OneOfPropertiesIsMissing()
     {
         var project = await TestProject.Project
             .Replace(("output.LastName = input.LastName;", ""));
 
         var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
-        diagnostics.Should().Contain(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+        diagnostics.Should().Contain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
+    }
+    
+    [Fact]
+    public async Task OneOfPropertiesIsMissingButValidationDisabled()
+    {
+        var project = await TestProject.Project
+            .Replace(
+                ("[AOTMapperMethod]", "[AOTMapperMethod(disableMissingPropertiesDetection: true)]"),
+                ("output.LastName = input.LastName;", ""));
+
+        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
+
+        diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
     }
 
     [Fact]

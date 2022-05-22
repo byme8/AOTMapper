@@ -4,8 +4,8 @@ namespace AOTMapper
 {
     public static class AOTMapperDescriptors
     {
-        public static DiagnosticDescriptor NotAllOutputValuesAreMapped = new DiagnosticDescriptor(
-            nameof(NotAllOutputValuesAreMapped),
+        public static DiagnosticDescriptor MissingPropertiesDetected = new DiagnosticDescriptor(
+            nameof(MissingPropertiesDetected),
             "Not all output properties are mapped",
             "Next properties are not mapped: {0}",
             "AOTMapper",

@@ -18,14 +18,14 @@ public class AddMissingPropertiesCodeFixTest
             .Replace(("output.LastName = input.LastName;", ""));
 
         var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
 
         var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFix());
 
          diagnostics =  await newProject.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
          diagnostics.Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);
-         diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+         diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
     }
     
     [Fact]
@@ -37,13 +37,13 @@ public class AddMissingPropertiesCodeFixTest
                 ("output.LastName = input.LastName;", ""));
 
         var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
 
         var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFix());
 
         diagnostics =  await newProject.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
         diagnostics.Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);
-        diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+        diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
     }
 }

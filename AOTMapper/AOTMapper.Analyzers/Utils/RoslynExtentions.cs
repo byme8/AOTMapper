@@ -83,11 +83,13 @@ namespace AOTMapper.Utils
             return string.Join($"{separator}{Environment.NewLine}", values);
         }
 
-        public static bool CanBeAOTMapperMethod(this MethodDeclarationSyntax methodDeclarationSyntax)
+        public static AttributeSyntax GetAOTMapperMethodAttribute(this MethodDeclarationSyntax methodDeclarationSyntax)
         {
             return methodDeclarationSyntax.AttributeLists
                 .SelectMany(o => o.Attributes)
-                .Any(o => o.Name.ToString().EndsWith("AOTMapperMethod"));
+                .FirstOrDefault(o => 
+                    o.Name.ToString().EndsWith("AOTMapperMethod") ||
+                    o.Name.ToString().EndsWith("AOTMapperMethodAttribute"));
         }
     }
 }

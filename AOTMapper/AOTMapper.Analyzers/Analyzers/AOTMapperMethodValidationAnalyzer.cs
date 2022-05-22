@@ -25,7 +25,7 @@ namespace AOTMapper.Analyzers
 
         private void Handle(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax method) || !method.CanBeAOTMapperMethod())
+            if (!(context.Node is MethodDeclarationSyntax method) || method.GetAOTMapperMethodAttribute() == null)
             {
                 return;
             }

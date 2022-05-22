@@ -17,7 +17,7 @@ namespace AOTMapper.Analyzers
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
             => ImmutableArray.Create(
-                AOTMapperDescriptors.NotAllOutputValuesAreMapped,
+                AOTMapperDescriptors.MissingPropertiesDetected,
                 AOTMapperDescriptors.ReturnOfOutputIsMissing);
 
         public override void Initialize(AnalysisContext context)
@@ -31,7 +31,24 @@ namespace AOTMapper.Analyzers
 
         private void Handle(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax method) || !method.CanBeAOTMapperMethod())
+            if (!(context.Node is MethodDeclarationSyntax method))
+            {
+                return;
+            }
+
+            var attributeSyntax = method.GetAOTMapperMethodAttribute();
+            if (attributeSyntax is null)
+            {
+                return;
+            }
+
+            var disableValidation = attributeSyntax.ArgumentList?.Arguments
+                .FirstOrDefault(o => o.NameColon?.Name.Identifier.Text == "disableMissingPropertiesDetection")?
+                .Expression
+                .ToString()
+                .ToLower();
+
+            if (disableValidation == "true")
             {
                 return;
             }
@@ -71,7 +88,7 @@ namespace AOTMapper.Analyzers
                     .ToImmutableDictionary();
 
                 var diagnosticOnReturn = Diagnostic.Create(
-                    AOTMapperDescriptors.NotAllOutputValuesAreMapped,
+                    AOTMapperDescriptors.MissingPropertiesDetected,
                     method.Identifier.GetLocation(),
                     properties: diagnosticProperties,
                     missingPropertiesString);

@@ -17,7 +17,7 @@ namespace AOTMapper.CodeFixes
     public class AddMissingPropertiesCodeFix : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds
-            => ImmutableArray.Create(AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+            => ImmutableArray.Create(AOTMapperDescriptors.MissingPropertiesDetected.Id);
 
         public override FixAllProvider GetFixAllProvider()
         {

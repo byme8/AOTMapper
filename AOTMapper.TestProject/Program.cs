@@ -20,7 +20,7 @@ public class Program
     }
 }
 
-public static class Mapper
+public static class UserMappers
 {
     [AOTMapperMethod]
     public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)

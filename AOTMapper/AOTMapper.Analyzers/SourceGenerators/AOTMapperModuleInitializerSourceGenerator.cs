@@ -68,7 +68,7 @@ namespace AOTMapper.Core
                 {{
                     var builder = new AOTMapperBuilder();
                     builder.Add{assemblyName}();
-                    return builder.Build();
+                    mapper = builder.Build();
                 }}
 
                 return mapper;
@@ -98,7 +98,7 @@ namespace AOTMapper.Core
         {
             if (syntaxNode is MethodDeclarationSyntax methodDeclarationSyntax)
             {
-                if (methodDeclarationSyntax.CanBeAOTMapperMethod())
+                if (methodDeclarationSyntax.GetAOTMapperMethodAttribute() != null)
                 {
                     Methods.Add(methodDeclarationSyntax);
                 }

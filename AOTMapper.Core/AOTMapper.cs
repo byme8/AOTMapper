@@ -32,7 +32,7 @@ namespace AOTMapper
             var sourceType = source.GetType();
             if (!Mappers.TryGetValue(sourceType, out var descriptors))
             {
-                throw new AOTMapperMappingIsMissingException("Mappings is missing for type " + sourceType.FullName);
+                throw new AOTMapperMappingIsMissingException("Mappings are missing for type " + sourceType.FullName);
             }
 
             var destinationType = typeof(TTarget);

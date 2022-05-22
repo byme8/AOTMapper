@@ -40,7 +40,7 @@ namespace AOTMapper.SourceGenerators
                     .FirstOrDefault(o => o.AttributeClass
                         .ToGlobalName().EndsWith("AOTMapper.Core.AOTMapperMethodAttribute"));
 
-                if (aotMapperAttribute is null)
+                if (aotMapperAttribute is null || methodSymbol.Parameters.Length != 2)
                 {
                     continue;
                 }
@@ -66,7 +66,7 @@ namespace AOTMapper.Core
             {{
                 if(mapper is null)
                 {{
-                    var builder = AOTMapperBuilder.Create();
+                    var builder = new AOTMapperBuilder();
                     builder.Add{assemblyName}();
                     return builder.Build();
                 }}

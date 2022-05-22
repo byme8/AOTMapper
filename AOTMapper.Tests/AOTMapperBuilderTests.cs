@@ -9,7 +9,7 @@ public class AOTMapperBuilderTests
     [Fact]
     public void CanAddMapper()
     {
-        var mapper = AOTMapperBuilder.Create()
+        var mapper = new AOTMapperBuilder()
             .AddMapper<TestUser, TestUserEntity>((m, s)
                 => new TestUserEntity
                 {
@@ -28,7 +28,7 @@ public class AOTMapperBuilderTests
     [Fact]
     public void CanAddMultipleMappers()
     {
-        var mapper = AOTMapperBuilder.Create()
+        var mapper = new AOTMapperBuilder()
             .AddMapper<TestUser, TestUserEntity>((m, s)
                 => new TestUserEntity
                 {
@@ -55,7 +55,7 @@ public class AOTMapperBuilderTests
     [Fact]
     public void CanAddTransitiveMappers()
     {
-        var mapper = AOTMapperBuilder.Create()
+        var mapper = new AOTMapperBuilder()
             .AddMapper<TestUser, TestUserEntity>((m, s)
                 => new TestUserEntity
                 {
@@ -81,7 +81,7 @@ public class AOTMapperBuilderTests
     [Fact]
     public void CanAddCombineMappers()
     {
-        var mapper1 = AOTMapperBuilder.Create()
+        var mapper1 = new AOTMapperBuilder()
             .AddMapper<TestUser, TestUserEntity>((m, s)
                 => new TestUserEntity
                 {
@@ -91,7 +91,7 @@ public class AOTMapperBuilderTests
                 })
             .Build();
 
-        var mapper2 = AOTMapperBuilder.Create()
+        var mapper2 = new AOTMapperBuilder()
             .AddMapper<TestUserRole, TestUserRoleEntity>((m, s)
                 => new TestUserRoleEntity
                 {
@@ -114,7 +114,7 @@ public class AOTMapperBuilderTests
     [Fact]
     public void MissingPropertiesAreIgnored()
     {
-        var mapper = AOTMapperBuilder.Create()
+        var mapper = new AOTMapperBuilder()
             .AddMapper<TestUser, TestUserEntity>((m, s)
                 => new TestUserEntity
                 {

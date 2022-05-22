@@ -13,11 +13,6 @@ namespace AOTMapper.Core
 
         public List<IAOTMapperDescriptor> Descriptors { get; set; }
 
-        public static AOTMapperBuilder Create()
-        {
-            return new AOTMapperBuilder();
-        }
-
         public static AOTMapperBuilder FromMappers(params IAOTMapper[] mappers)
         {
             var descriptors = mappers

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace AOTMapper.Tests;
 
-public class AnalyzerTest
+public class MissingPropertiesAnalyzerTest
 {
     [Fact]
     public async Task OneOfPropertiesIsNotAssigned()
@@ -14,7 +14,7 @@ public class AnalyzerTest
         var project = await TestProject.Project
             .Replace(("output.LastName = input.LastName;", ""));
 
-        var diagnostics = await project.ApplyAnalyzers(new OutputPropertiesAnalyzer());
+        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
         diagnostics.Should().Contain(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
     }
@@ -25,7 +25,7 @@ public class AnalyzerTest
         var project = await TestProject.Project
             .Replace(("output", "result"));
 
-        var diagnostics = await project.ApplyAnalyzers(new OutputPropertiesAnalyzer());
+        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
         diagnostics.Should().Contain(o => o.Id == AOTMapperDescriptors.ReturnOfOutputIsMissing.Id);
     }

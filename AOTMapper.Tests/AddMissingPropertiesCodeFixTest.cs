@@ -9,7 +9,7 @@ using Xunit;
 
 namespace AOTMapper.Tests;
 
-public class CodeFixTest
+public class AddMissingPropertiesCodeFixTest
 {
     [Fact]
     public async Task OneOfPropertiesIsNotAssigned()
@@ -17,12 +17,12 @@ public class CodeFixTest
         var project = await TestProject.Project
             .Replace(("output.LastName = input.LastName;", ""));
 
-        var diagnostics = await project.ApplyAnalyzers(new OutputPropertiesAnalyzer());
-        var diagnostic = diagnostics.Single(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
+        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
+        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
 
-        var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFixProvider());
+        var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFix());
 
-         diagnostics =  await newProject.ApplyAnalyzers(new OutputPropertiesAnalyzer());
+         diagnostics =  await newProject.ApplyAnalyzers(new MissingPropertiesAnalyzer());
 
          diagnostics
              .Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);

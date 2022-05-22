@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace AOTMapper.Analyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class OutputPropertiesAnalyzer : DiagnosticAnalyzer
+    public class MissingPropertiesAnalyzer : DiagnosticAnalyzer
     {
         public const string MissingProperties = "MissingProperties";
         public const string Spliter = ", ";

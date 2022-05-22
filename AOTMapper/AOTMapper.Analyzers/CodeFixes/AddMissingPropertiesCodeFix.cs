@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using AOTMapper.Analyzers;
 using AOTMapper.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -13,11 +12,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AOTMapper.CodeFixes
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AddMissingPropertiesCodeFixProvider)), Shared]
-    public class AddMissingPropertiesCodeFixProvider : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(AddMissingPropertiesCodeFix)), Shared]
+    public class AddMissingPropertiesCodeFix : CodeFixProvider
     {
-        public static string[] Spliter = new[] { OutputPropertiesAnalyzer.Spliter };
-
         public override ImmutableArray<string> FixableDiagnosticIds
             => ImmutableArray.Create(AOTMapperDescriptors.NotAllOutputValuesAreMapped.Id);
 

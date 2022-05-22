@@ -6,7 +6,17 @@ public class Program
 {
     public static void Main()
     {
-        Console.WriteLine("Hello world");
+        var mapper = new AOTMapperBuilder()
+            .AddAOTMapperTestProject()
+            .Build();
+
+        var entity = mapper.Map<UserEntity>(new User
+        {
+            FirstName = "John",
+            LastName = "Doe",
+        });
+
+        var user = mapper.Map<User>(entity);
     }
 }
 

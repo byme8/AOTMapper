@@ -20,7 +20,17 @@ namespace AOTMapper
             "AOTMapper",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            "You need to return a proper variable.");
+            "The return statement has to return variable with name 'output'.");
+        
+        public static DiagnosticDescriptor AOTMapperMethodWrongDeclaration = new DiagnosticDescriptor(
+            nameof(AOTMapperMethodWrongDeclaration),
+            "The AOTMapper method has wrong declaration",
+            "The AOTMapper method have to accept two parameters: IAOTMapper mapper and source object, and return the mapped object",
+            "AOTMapper",
+            DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            "The AOTMapper method have to accept two parameters: IAOTMapper mapper and source object, and return the mapped object.");
+        
 
     }
 }

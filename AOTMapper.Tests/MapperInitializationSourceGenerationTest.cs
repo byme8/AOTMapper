@@ -3,13 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AOTMapper.Core;
 using AOTMapper.Tests.Helpers;
-using AOTMapper.Utils;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
 namespace AOTMapper.Tests;
 
-public class SourceGenerationTest
+public class MapperInitializationSourceGenerationTest
 {
     [Fact]
     public async Task CompilesWithoutErrors()
@@ -21,6 +20,8 @@ public class SourceGenerationTest
             .Where(o => o.Severity == DiagnosticSeverity.Error)
             .ToArray();
         
+        Assert.Empty(errors);
+        
     }
 
     [Fact]
@@ -31,7 +32,7 @@ public class SourceGenerationTest
         var method = type.GetMethod("AddAOTMapperTestProject")
             .CreateDelegate<Func<AOTMapperBuilder, AOTMapperBuilder>>();
 
-        var builder = AOTMapperBuilder.Create();
+        var builder = new AOTMapperBuilder();
         method.Invoke(builder);
         
         Assert.NotEmpty(builder.Descriptors);

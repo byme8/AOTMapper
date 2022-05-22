@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SF = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace AOTMapper.CodeFixes
 {
@@ -45,13 +46,13 @@ namespace AOTMapper.CodeFixes
 
             var semanticModel = await context.Document.GetSemanticModelAsync();
             var targetNode = root.FindNode(diagnostic.Location.SourceSpan);
-            var methodsNode = targetNode.FirstAncestorOrSelf<MemberDeclarationSyntax>();
-            if (methodsNode is null)
+            var methodNode = targetNode.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+            if (methodNode is null)
             {
                 return context.Document;
             }
 
-            var maybeMethod = semanticModel.GetDeclaredSymbol(methodsNode);
+            var maybeMethod = semanticModel.GetDeclaredSymbol(methodNode);
             if (!(maybeMethod is IMethodSymbol method) || method.Parameters.IsEmpty)
             {
                 return context.Document;
@@ -64,14 +65,6 @@ namespace AOTMapper.CodeFixes
                 .DescendantNodes()
                 .OfType<AssignmentExpressionSyntax>()
                 .ToArray();
-
-            var lastAssigment = allAssignments
-                .LastOrDefault();
-
-            if (lastAssigment == null)
-            {
-                return context.Document;
-            }
 
             var outputProperties = outputType
                 .GetAllPublicProperties()
@@ -87,33 +80,94 @@ namespace AOTMapper.CodeFixes
                 .Where(o => !assignmentProperties.Contains(o.Key))
                 .ToArray();
 
-            var newAssignmentExpressions = missingProperties
-                .Select(property => SyntaxFactory.ExpressionStatement(
-                    SyntaxFactory.AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName("output"),
-                            SyntaxFactory.IdentifierName(property.Key)),
-                        SyntaxFactory.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.IdentifierName(inputParameter.Name),
-                            SyntaxFactory.IdentifierName(property.Key)))
-                ))
-                .ToArray();
+            var lastAssigment = allAssignments
+                .LastOrDefault();
 
-            var statement = lastAssigment.Parent;
-            if (statement is null)
+            if (lastAssigment == null)
             {
-                return context.Document;
+                return FillMethod();
             }
 
-            var newRoot = root.InsertNodesAfter(statement, newAssignmentExpressions);
+            return AddMissingAssignments();
 
-            var newDocument = context.Document
-                .WithSyntaxRoot(newRoot);
+            Document AddMissingAssignments()
+            {
+                var newAssignmentExpressions = missingProperties
+                    .Select(property => SF.ExpressionStatement(
+                        SF.AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            SF.MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                SF.IdentifierName("output"),
+                                SF.IdentifierName(property.Key)),
+                            SF.MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                SF.IdentifierName(inputParameter.Name),
+                                SF.IdentifierName(property.Key)))
+                    ))
+                    .ToArray();
 
-            return newDocument;
+                var statement = lastAssigment.Parent;
+                if (statement is null)
+                {
+                    return context.Document;
+                }
+
+                var newRoot = root.InsertNodesAfter(statement, newAssignmentExpressions);
+
+                var newDocument = context.Document
+                    .WithSyntaxRoot(newRoot);
+
+                return newDocument;
+            }
+
+            Document FillMethod()
+            {
+                var outputVariable = SF.LocalDeclarationStatement(
+                    SF.VariableDeclaration(SF.ParseTypeName("var"),
+                        SF.SeparatedList(
+                            new[]
+                            {
+                                SF.VariableDeclarator(
+                                    SF.Identifier("output"),
+                                    null,
+                                    SF.EqualsValueClause(
+                                        SF.ObjectCreationExpression(
+                                            SF.ParseTypeName(outputType.ToGlobalName()),
+                                            SF.ArgumentList(),
+                                            null)))
+                            })));
+
+                var newAssignmentExpressions = missingProperties
+                    .Select(property => SF.ExpressionStatement(
+                        SF.AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            SF.MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                SF.IdentifierName("output"),
+                                SF.IdentifierName(property.Key)),
+                            SF.MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                SF.IdentifierName(inputParameter.Name),
+                                SF.IdentifierName(property.Key)))
+                    ))
+                    .ToArray();
+
+                var returnOutputVariable = SF.ReturnStatement(
+                    SF.IdentifierName("output"));
+
+                var statements =
+                    new StatementSyntax[] { outputVariable }
+                        .Concat(newAssignmentExpressions)
+                        .Concat(new[] { returnOutputVariable });
+
+                var newRoot = root.ReplaceNode(methodNode, methodNode.WithBody(SF.Block(statements)));
+
+                var newDocument = context.Document
+                    .WithSyntaxRoot(newRoot);
+
+                return newDocument;
+            }
         }
     }
 }

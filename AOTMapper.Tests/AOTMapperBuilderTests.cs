@@ -1,5 +1,6 @@
 using AOTMapper.Core;
 using AOTMapper.Tests.Data;
+using FluentAssertions;
 using Xunit;
 
 namespace AOTMapper.Tests;
@@ -21,8 +22,8 @@ public class AOTMapperBuilderTests
         var user = new TestUser { Name = "John", Age = 30 };
         var userEntity = mapper.Map<TestUserEntity>(user);
 
-        Assert.Equal(user.Name, userEntity.Name);
-        Assert.Equal(user.Age, userEntity.Age);
+        userEntity.Name.Should().Be(user.Name);
+        userEntity.Age.Should().Be(user.Age);
     }
 
     [Fact]
@@ -48,8 +49,8 @@ public class AOTMapperBuilderTests
         };
 
         var userRoleEntity = mapper.Map<TestUserRoleEntity>(userRole);
-
-        Assert.Equal(userRole.Name, userRoleEntity.Name);
+        
+        userRole.Name.Should().Be(userRoleEntity.Name);
     }
 
     [Fact]
@@ -73,9 +74,9 @@ public class AOTMapperBuilderTests
         var user = new TestUser { Name = "John", Age = 30, Role = new TestUserRole { Name = "Admin" } };
         var userEntity = mapper.Map<TestUserEntity>(user);
 
-        Assert.Equal(user.Name, userEntity.Name);
-        Assert.Equal(user.Age, userEntity.Age);
-        Assert.Equal(user.Role.Name, userEntity.Role.Name);
+        userEntity.Name.Should().Be(user.Name);
+        userEntity.Age.Should().Be(user.Age);
+        userEntity.Role.Name.Should().Be(user.Role.Name);
     }
 
     [Fact]
@@ -106,9 +107,9 @@ public class AOTMapperBuilderTests
         var user = new TestUser { Name = "John", Age = 30, Role = new TestUserRole { Name = "Admin" } };
         var userEntity = mapper.Map<TestUserEntity>(user);
 
-        Assert.Equal(user.Name, userEntity.Name);
-        Assert.Equal(user.Age, userEntity.Age);
-        Assert.Equal(user.Role.Name, userEntity.Role.Name);
+        userEntity.Name.Should().Be(user.Name);
+        userEntity.Age.Should().Be(user.Age);
+        userEntity.Role.Name.Should().Be(user.Role.Name);
     }
 
     [Fact]
@@ -132,8 +133,8 @@ public class AOTMapperBuilderTests
         var user = new TestUser { Name = "John" };
         var userEntity = mapper.Map<TestUserEntity>(user);
 
-        Assert.Equal(user.Name, userEntity.Name);
-        Assert.Equal(0, userEntity.Age);
-        Assert.Null(userEntity.Role);
+        userEntity.Name.Should().Be(user.Name);
+        userEntity.Age.Should().Be(0);
+        userEntity.Role.Should().BeNull();
     }
 }

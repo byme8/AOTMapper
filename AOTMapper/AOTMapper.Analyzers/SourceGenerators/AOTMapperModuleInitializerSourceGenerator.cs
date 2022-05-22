@@ -58,16 +58,22 @@ namespace AOTMapper.Core
 {{
     public static class AOTMapperFor{assemblyName}
     {{
-        [ModuleInitializer]
-        public static void Initialize()
-        {{
-            var builder = AOTMapperBuilder.Create();
-            builder.Add{assemblyName}();
+        private static IAOTMapper mapper;
 
-            Mapper = builder.Build(); 
+        public static IAOTMapper Mapper 
+        {{ 
+            get
+            {{
+                if(mapper is null)
+                {{
+                    var builder = AOTMapperBuilder.Create();
+                    builder.Add{assemblyName}();
+                    return builder.Build();
+                }}
+
+                return mapper;
+            }}
         }}
-
-        public static IAOTMapper Mapper {{ get; private set; }}
 
         public static AOTMapperBuilder Add{assemblyName}(this AOTMapperBuilder builder)
         {{

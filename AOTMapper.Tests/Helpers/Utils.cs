@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -45,5 +48,28 @@ public static class Utils
         var newDocument = document.WithText(SourceText.From(newText));
 
         return newDocument.Project;
+    }
+    
+    public static async Task<Assembly> CompileToRealAssembly(this Project project)
+    {
+        var compilation = await project.GetCompilationAsync();
+        var analyzerResults = compilation.GetDiagnostics();
+
+        var error = compilation.GetDiagnostics().Concat(analyzerResults)
+            .FirstOrDefault(o => o.Severity == DiagnosticSeverity.Error);
+
+        if (error != null)
+        {
+            throw new Exception(error.GetMessage());
+        }
+
+        using (var memoryStream = new MemoryStream())
+        {
+            compilation.Emit(memoryStream);
+            var bytes = memoryStream.ToArray();
+            var assembly = Assembly.Load(bytes);
+
+            return assembly;
+        }
     }
 }

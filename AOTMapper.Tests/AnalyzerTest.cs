@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using AOTMapper.Diagnostics;
+using AOTMapper.Analyzers;
 using AOTMapper.Tests.Helpers;
 using FluentAssertions;
 using Xunit;

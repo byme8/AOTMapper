@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace AOTMapper.Diagnostics
+namespace AOTMapper.Analyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class OutputPropertiesAnalyzer : DiagnosticAnalyzer
@@ -31,7 +31,7 @@ namespace AOTMapper.Diagnostics
 
         private void Handle(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax method))
+            if (!(context.Node is MethodDeclarationSyntax method) || !method.CanBeAOTMapperMethod())
             {
                 return;
             }

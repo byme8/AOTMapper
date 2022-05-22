@@ -12,8 +12,8 @@ public class Program
 
 public static class Mapper
 {
-    [AOTMapper]
-    public static UserEntity MapUserToUserEntity(this User input)
+    [AOTMapperMethod]
+    public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)
     {
         var output = new UserEntity();
 

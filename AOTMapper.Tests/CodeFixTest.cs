@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
+using AOTMapper.Analyzers;
 using AOTMapper.CodeFixes;
-using AOTMapper.Diagnostics;
 using AOTMapper.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.CodeAnalysis;

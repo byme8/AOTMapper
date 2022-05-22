@@ -3,7 +3,7 @@ using System;
 namespace AOTMapper.Core
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class AOTMapperAttribute : Attribute
+    public class AOTMapperMethodAttribute : Attribute
     {
         
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using SF = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace AOTMapper.Utils
@@ -18,11 +19,6 @@ namespace AOTMapper.Utils
         public static string Join(this IEnumerable<string> code, string separator = "")
         {
             return string.Join(separator, code);
-        }
-
-        public static string JoinWithNewLine(this IEnumerable<string> code)
-        {
-            return string.Join(Environment.NewLine, code);
         }
 
         public static BlockSyntax ToBlock(this string code)
@@ -62,15 +58,36 @@ namespace AOTMapper.Utils
                 .OfType<IPropertySymbol>();
         }
 
-        public static TValue Cast<TValue>(this object value)
+        public static SourceText ToSourceText(this string source)
         {
-            return (TValue)value;
+            return SourceText.From(source, Encoding.UTF8);
         }
 
-        public static TValue As<TValue>(this object value)
-            where TValue : class
+        public static string ToGlobalName(this ISymbol symbol)
         {
-            return value as TValue;
+            return symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        }
+
+        public static string ToSafeGlobalName(this ISymbol symbol)
+        {
+            return symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", "").Replace(".", "");
+        }
+
+        public static string Wrap(this string text, string left = "", string right = "")
+        {
+            return $"{left}{text}{right}";
+        }
+
+        public static string JoinWithNewLine(this IEnumerable<string> values, string separator = "")
+        {
+            return string.Join($"{separator}{Environment.NewLine}", values);
+        }
+
+        public static bool CanBeAOTMapperMethod(this MethodDeclarationSyntax methodDeclarationSyntax)
+        {
+            return methodDeclarationSyntax.AttributeLists
+                .SelectMany(o => o.Attributes)
+                .Any(o => o.Name.ToString().EndsWith("AOTMapperMethod"));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using AOTMapper.Diagnostics;
+using AOTMapper.Analyzers;
 using AOTMapper.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -60,7 +60,7 @@ namespace AOTMapper.CodeFixes
                 return context.Document;
             }
 
-            var inputParameter = method.Parameters.First();
+            var inputParameter = method.Parameters.Last();
             var outputType = method.ReturnType;
 
             var allAssignments = targetNode

@@ -61,8 +61,15 @@ namespace AOTMapper.CodeFixes
             var inputParameter = method.Parameters.Last();
             var outputType = method.ReturnType;
 
-            var allAssignments = targetNode
+            var descendantNodes = targetNode
                 .DescendantNodes()
+                .ToArray();
+
+            var returnStatement = descendantNodes
+                .OfType<ReturnStatementSyntax>()
+                .LastOrDefault();
+            
+            var allAssignments = descendantNodes
                 .OfType<AssignmentExpressionSyntax>()
                 .ToArray();
 
@@ -80,10 +87,7 @@ namespace AOTMapper.CodeFixes
                 .Where(o => !assignmentProperties.Contains(o.Key))
                 .ToArray();
 
-            var lastAssigment = allAssignments
-                .LastOrDefault();
-
-            if (lastAssigment == null)
+            if (returnStatement == null)
             {
                 return FillMethod();
             }
@@ -107,13 +111,7 @@ namespace AOTMapper.CodeFixes
                     ))
                     .ToArray();
 
-                var statement = lastAssigment.Parent;
-                if (statement is null)
-                {
-                    return context.Document;
-                }
-
-                var newRoot = root.InsertNodesAfter(statement, newAssignmentExpressions);
+                var newRoot = root.InsertNodesBefore(returnStatement, newAssignmentExpressions);
 
                 var newDocument = context.Document
                     .WithSyntaxRoot(newRoot);

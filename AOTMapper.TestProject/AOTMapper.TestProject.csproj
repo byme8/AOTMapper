@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AOTMapper.Core\AOTMapper.Core.csproj" />
-      <ProjectReference Include="..\AOTMapper\AOTMapper.Analyzers\AOTMapper.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+      <ProjectReference Include="..\AOTMapper\AOTMapper\AOTMapper.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>

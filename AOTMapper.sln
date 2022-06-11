@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AOTMapper.Analyzers", "AOTMapper\AOTMapper.Analyzers\AOTMapper.Analyzers.csproj", "{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AOTMapper", "AOTMapper\AOTMapper\AOTMapper.csproj", "{D63854B4-111A-4DB7-AFDB-7C45D31E69AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AOTMapper.Core", "AOTMapper.Core\AOTMapper.Core.csproj", "{15546505-E272-4CAC-9396-D2344FDEB00D}"
 EndProject

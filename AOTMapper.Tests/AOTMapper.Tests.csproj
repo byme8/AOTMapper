@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AOTMapper\AOTMapper.Analyzers\AOTMapper.Analyzers.csproj" />
+      <ProjectReference Include="..\AOTMapper\AOTMapper\AOTMapper.csproj" />
     </ItemGroup>
 
 </Project>

@@ -29,7 +29,6 @@ public static class UserMappers
 
         output.FirstName = input.FirstName;
         output.LastName = input.LastName;
-
         return output;
     }
 }

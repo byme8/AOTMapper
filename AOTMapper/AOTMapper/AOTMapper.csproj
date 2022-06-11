@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>AOTMapper.Analyzers</PackageId>
+    <PackageId>AOTMapper</PackageId>
     <Authors>byme</Authors>
     <PackageProjectUrl>https://github.com/byme8/AOTMapper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/byme8/AOTMapper</RepositoryUrl>
@@ -18,7 +18,7 @@
     <Copyright></Copyright>
     <PackageTags>AOTMapper, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
-    <Version>1.0.5</Version>
+    <Version>2.0.0-preview1</Version>
     <RepositoryType>git</RepositoryType>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>

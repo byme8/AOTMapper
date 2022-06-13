@@ -7,7 +7,7 @@ using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
-namespace AOTMapper.Tests;
+namespace AOTMapper.Tests.CodeFixes;
 
 public class AddMissingPropertiesCodeFixTest
 {

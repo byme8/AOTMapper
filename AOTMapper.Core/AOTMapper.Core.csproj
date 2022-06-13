@@ -9,7 +9,7 @@
     <PackageTags>AOTMapper, analyzers</PackageTags>
     <Description>Holds core types for AOTMapper</Description>
     <Product>AOTMapper.Core</Product>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   

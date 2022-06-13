@@ -86,7 +86,7 @@ namespace AOTMapper.Core
     }}
 }}
 ";
-            context.AddSource($"AOTMapperModuleInitializerFor{assemblyName}", source);
+            context.AddSource($"AOTMapperModuleInitializerFor{assemblyName}.g.cs", source);
         }
     }
 

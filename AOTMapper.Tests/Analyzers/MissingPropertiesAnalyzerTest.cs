@@ -4,7 +4,7 @@ using AOTMapper.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
 
-namespace AOTMapper.Tests;
+namespace AOTMapper.Tests.Analyzers;
 
 public class MissingPropertiesAnalyzerTest
 {

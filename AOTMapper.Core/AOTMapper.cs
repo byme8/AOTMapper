@@ -8,6 +8,8 @@ namespace AOTMapper
     public interface IAOTMapper
     {
         TTarget Map<TTarget>(object source);
+
+        TTarget Map<TTarget, TSource>(TSource source);
         
         IAOTMapperDescriptor[] GetDescriptors();
         
@@ -30,6 +32,28 @@ namespace AOTMapper
             }
             
             var sourceType = source.GetType();
+            if (!Mappers.TryGetValue(sourceType, out var descriptors))
+            {
+                throw new AOTMapperMappingIsMissingException("Mappings are missing for type " + sourceType.FullName);
+            }
+
+            var destinationType = typeof(TTarget);
+            if (!descriptors.TryGetValue(destinationType, out var descriptor))
+            {
+                throw new AOTMapperMappingIsMissingException($"Mapping from {sourceType.FullName} to {destinationType.FullName} is missing");
+            }
+
+            return (TTarget)descriptor.Map(this, source);
+        }
+
+        public TTarget Map<TTarget, TSource>(TSource source)
+        {
+            if (source is null)
+            {
+                return default;
+            }
+            
+            var sourceType = typeof(TSource);
             if (!Mappers.TryGetValue(sourceType, out var descriptors))
             {
                 throw new AOTMapperMappingIsMissingException("Mappings are missing for type " + sourceType.FullName);

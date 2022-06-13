@@ -6,7 +6,7 @@ using AOTMapper.Tests.Helpers;
 using Microsoft.CodeAnalysis;
 using Xunit;
 
-namespace AOTMapper.Tests;
+namespace AOTMapper.Tests.SourceGenerators;
 
 public class MapperInitializationSourceGenerationTest
 {

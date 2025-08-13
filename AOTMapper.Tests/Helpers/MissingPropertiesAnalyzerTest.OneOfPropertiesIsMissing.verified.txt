@@ -1,0 +1,9 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: MissingPropertiesDetected,
+      Severity: Error,
+      Message: Next properties are not mapped: LastName
+    }
+  ]
+}

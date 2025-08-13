@@ -1,0 +1,43 @@
+﻿{
+  builder: {
+    Descriptors: [
+      {
+        Source: User,
+        Target: UserEntity,
+        MapFunction: {
+          Type: Func<IAOTMapper, User, UserEntity>,
+          Target: UserMappers,
+          Method: UserEntity MapUserToUserEntity(AOTMapper.IAOTMapper, User)
+        }
+      },
+      {
+        Source: UserEntity,
+        Target: User,
+        MapFunction: {
+          Type: Func<IAOTMapper, UserEntity, User>,
+          Target: AOTMapperForAOTMapperTestProject.<>c,
+          Method: User AddAOTMapperTestProject(AOTMapper.IAOTMapper, UserEntity)
+        }
+      }
+    ]
+  },
+  user: {
+    FirstName: John,
+    LastName: Doe
+  },
+  entity: {
+    FirstName: John,
+    LastName: Doe
+  },
+  mappedUser: {
+    FirstName: John,
+    LastName: Doe
+  },
+  userWithDefaults: {
+    FirstName: John,
+    LastName: Doe
+  },
+  userDto: {
+    Name: John-Doe
+  }
+}

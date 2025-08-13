@@ -14,36 +14,76 @@ public class AddMissingPropertiesCodeFixTest
     [Fact]
     public async Task OneOfPropertiesIsNotAssigned()
     {
-        var project = await TestProject.Project
-            .Replace(("output.LastName = input.LastName;", ""));
+        var mapper = """
+             using AOTMapper;
+             using AOTMapper.Core;
+             
+             namespace TestProject
+             {
+                 public static class UserMappers
+                 {
+                     [AOTMapperMethod]
+                     public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)
+                     {
+                         var output = new UserEntity();
+                         output.FirstName = input.FirstName;
+                         // Missing: output.LastName = input.LastName;
+                         return output;
+                     }
+                 }
+             
+                 public class User
+                 {
+                     public string FirstName { get; set; }
+                     public string LastName { get; set; }
+                 }
+             
+                 public class UserEntity  
+                 {
+                     public string FirstName { get; set; }
+                     public string LastName { get; set; }
+                 }
+             }
+             """;
 
-        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
-
-        var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFix());
-
-         diagnostics =  await newProject.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-
-         diagnostics.Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);
-         diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
+        await TestProject.Project.VerifyCodeFix(mapper, new MissingPropertiesAnalyzer(), new AddMissingPropertiesCodeFix());
     }
     
     [Fact]
     public async Task MethodWithoutAssignments()
     {
-        var project = await TestProject.Project
-            .Replace(
-                ("output.FirstName = input.FirstName;", ""),
-                ("output.LastName = input.LastName;", ""));
+        var mapper = """
+             using AOTMapper;
+             using AOTMapper.Core;
+             
+             namespace TestProject
+             {
+                 public static class UserMappers
+                 {
+                     [AOTMapperMethod]
+                     public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)
+                     {
+                         var output = new UserEntity();
+                         // Missing both: output.FirstName = input.FirstName;
+                         // Missing both: output.LastName = input.LastName;
+                         return output;
+                     }
+                 }
+             
+                 public class User
+                 {
+                     public string FirstName { get; set; }
+                     public string LastName { get; set; }
+                 }
+             
+                 public class UserEntity  
+                 {
+                     public string FirstName { get; set; }
+                     public string LastName { get; set; }
+                 }
+             }
+             """;
 
-        var diagnostics = await project.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-        var diagnostic = diagnostics.First(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
-
-        var newProject = await project.ApplyCodeFix(diagnostic, new AddMissingPropertiesCodeFix());
-
-        diagnostics =  await newProject.ApplyAnalyzers(new MissingPropertiesAnalyzer());
-
-        diagnostics.Should().NotContain(o => o.Severity == DiagnosticSeverity.Error);
-        diagnostics.Should().NotContain(o => o.Id == AOTMapperDescriptors.MissingPropertiesDetected.Id);
+        await TestProject.Project.VerifyCodeFix(mapper, new MissingPropertiesAnalyzer(), new AddMissingPropertiesCodeFix());
     }
 }

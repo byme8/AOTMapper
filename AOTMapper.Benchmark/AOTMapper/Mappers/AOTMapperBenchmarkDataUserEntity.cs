@@ -1,9 +1,14 @@
-﻿
+﻿using AOTMapper.Benchmark.Data;
+using AOTMapper.Core;
+
+namespace AOTMapper.Benchmark.AOTMapper.Mappers;
+
 public static class AOTMapperBenchmarkDataUserEntityExtentions 
 {
-    public static AOTMapper.Benchmark.Data.User MapToUser(this AOTMapper.Benchmark.Data.UserEntity input)
+    [AOTMapperMethod]
+    public static User MapToUser(this UserEntity input)
     {
-        var output = new AOTMapper.Benchmark.Data.User();
+        var output = new User();
         output.FirstName = input.FirstName;
         output.LastName = input.LastName;
         output.Name = $"{input.FirstName} {input.LastName}"; // missing property

@@ -1,11 +1,15 @@
-﻿
-using System;
+﻿using System;
+using AOTMapper.Benchmark.Data;
+using AOTMapper.Core;
 
-public static class AOTMapperBenchmarkDataUserExtentions 
+namespace AOTMapper.Benchmark.AOTMapper.Mappers;
+
+public static class AotMapperBenchmarkDataUserExtensions 
 {
-    public static AOTMapper.Benchmark.Data.UserEntity MapToUserEntity(this AOTMapper.Benchmark.Data.User input)
+    [AOTMapperMethod]
+    public static UserEntity MapToUserEntity(this User input)
     {
-        var output = new AOTMapper.Benchmark.Data.UserEntity();
+        var output = new UserEntity();
         output.FirstName = input.FirstName;
         output.LastName = input.LastName;
         output.Id = Guid.Empty;

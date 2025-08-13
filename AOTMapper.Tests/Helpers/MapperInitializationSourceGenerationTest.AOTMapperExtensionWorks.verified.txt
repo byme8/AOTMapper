@@ -1,0 +1,11 @@
+﻿[
+  {
+    Source: User,
+    Target: UserEntity,
+    MapFunction: {
+      Type: Func<IAOTMapper, User, UserEntity>,
+      Target: UserMappers,
+      Method: TestProject.UserEntity MapUserToUserEntity(AOTMapper.IAOTMapper, TestProject.User)
+    }
+  }
+]

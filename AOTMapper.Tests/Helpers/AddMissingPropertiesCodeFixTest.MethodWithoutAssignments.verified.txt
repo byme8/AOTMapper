@@ -1,0 +1,71 @@
+﻿{
+  OriginalDiagnostics: [
+    {
+      Id: MissingPropertiesDetected,
+      Severity: Error,
+      Message: Next properties are not mapped: FirstName, LastName
+    }
+  ],
+  OriginalCode:
+using AOTMapper;
+using AOTMapper.Core;
+
+namespace TestProject
+{
+    public static class UserMappers
+    {
+        [AOTMapperMethod]
+        public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)
+        {
+            var output = new UserEntity();
+            // Missing both: output.FirstName = input.FirstName;
+            // Missing both: output.LastName = input.LastName;
+            return output;
+        }
+    }
+
+    public class User
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    public class UserEntity  
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+},
+  FixedCode:
+using AOTMapper;
+using AOTMapper.Core;
+
+namespace TestProject
+{
+    public static class UserMappers
+    {
+        [AOTMapperMethod]
+        public static UserEntity MapUserToUserEntity(this IAOTMapper mapper, User input)
+        {
+            var output = new UserEntity();
+            output.FirstName = input.FirstName;
+            output.LastName = input.LastName;
+            // Missing both: output.FirstName = input.FirstName;
+            // Missing both: output.LastName = input.LastName;
+            return output;
+        }
+    }
+
+    public class User
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    public class UserEntity  
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+}
+}

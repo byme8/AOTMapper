@@ -40,7 +40,28 @@ namespace AOTMapper.SourceGenerators
                     .FirstOrDefault(o => o.AttributeClass
                         .ToGlobalName().EndsWith("AOTMapper.Core.AOTMapperMethodAttribute"));
 
-                if (aotMapperAttribute is null || methodSymbol.Parameters.Length != 2)
+                if (aotMapperAttribute is null)
+                {
+                    continue;
+                }
+
+                var isValidSignature = false;
+                
+                if (methodSymbol.Parameters.Length == 2 && 
+                    methodSymbol.Parameters[0].Type.ToGlobalName() == "global::AOTMapper.IAOTMapper")
+                {
+                    isValidSignature = true; // Classic pattern
+                }
+                else if (methodSymbol.Parameters.Length == 1 && methodSymbol.IsExtensionMethod)
+                {
+                    isValidSignature = true; // Single-parameter instance extension pattern
+                }
+                else if (methodSymbol.Parameters.Length > 1 && methodSymbol.IsExtensionMethod)
+                {
+                    isValidSignature = true; // Multi-parameter instance extension pattern
+                }
+
+                if (!isValidSignature)
                 {
                     continue;
                 }
@@ -49,6 +70,34 @@ namespace AOTMapper.SourceGenerators
             }
 
             var assemblyName = compilation.Assembly.Identity.Name.Replace(".", "");
+            
+            var mapperRegistrations = verifiedMethods
+                .Where(o => 
+                {
+                    // Only register methods that should be registered with the mapper
+                    if (o.Parameters.Length == 2 && 
+                        o.Parameters[0].Type.ToGlobalName() == "global::AOTMapper.IAOTMapper")
+                    {
+                        return true; // Classic pattern
+                    }
+
+                    if (o.Parameters.Length == 1 && o.IsExtensionMethod)
+                    {
+                        return true; // Single-parameter instance extension pattern
+                    }
+                    return false; // Multi-parameter instance extensions are not registered
+                })
+                .Select(o => 
+                {
+                    var sourceType = o.Parameters.Length == 2 ? o.Parameters[1].Type.ToGlobalName() : o.Parameters[0].Type.ToGlobalName();
+                    var targetType = o.ReturnType.ToGlobalName();
+                    var methodCall = o.Parameters.Length == 2 
+                        ? $"{o.ContainingSymbol.ToGlobalName()}.{o.ToGlobalName()}" 
+                        : $"(mapper, input) => {o.ContainingSymbol.ToGlobalName()}.{o.ToGlobalName()}(input)";
+                    return $"            builder.AddMapper<{sourceType}, {targetType}>({methodCall});";
+                })
+                .JoinWithNewLine();
+            
             var source =
                 $@"
 using System.Runtime.CompilerServices;
@@ -77,9 +126,7 @@ namespace AOTMapper.Core
 
         public static AOTMapperBuilder Add{assemblyName}(this AOTMapperBuilder builder)
         {{
-            {verifiedMethods
-                .Select(o => $"builder.AddMapper<{o.Parameters[1].Type.ToGlobalName()}, {o.ReturnType.ToGlobalName()}>({o.ContainingSymbol.ToGlobalName()}.{o.ToGlobalName()});")
-                .JoinWithNewLine()}
+{mapperRegistrations}
 
             return builder;
         }}

@@ -1,0 +1,42 @@
+﻿{
+  GeneratedSources: [
+    {
+      FileName: AOTMapperModuleInitializerForAOTMapperTestProject.g.cs,
+      Content:
+using System.Runtime.CompilerServices;
+using AOTMapper.Core;
+
+namespace AOTMapper.Core
+{
+    public static class AOTMapperForAOTMapperTestProject
+    {
+        private static IAOTMapper mapper;
+
+        public static IAOTMapper Mapper 
+        { 
+            get
+            {
+                if(mapper is null)
+                {
+                    var builder = new AOTMapperBuilder();
+                    builder.AddAOTMapperTestProject();
+                    mapper = builder.Build();
+                }
+
+                return mapper;
+            }
+        }
+
+        public static AOTMapperBuilder AddAOTMapperTestProject(this AOTMapperBuilder builder)
+        {
+            builder.AddMapper<global::AOTMapper.TestProject.User, global::AOTMapper.TestProject.UserEntity>(global::AOTMapper.TestProject.UserMappers.MapUserToUserEntity);
+            builder.AddMapper<global::AOTMapper.TestProject.UserEntity, global::AOTMapper.TestProject.User>((mapper, input) => global::AOTMapper.TestProject.UserMappers.MapUserEntityToUser(input));
+
+            return builder;
+        }
+    }
+}
+
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+﻿{
+  Diagnostics: [
+    {
+      Id: MissingPropertiesDetected,
+      Severity: Error,
+      Message: Next properties are not mapped: FirstName, LastName
+    },
+    {
+      Id: ReturnOfOutputIsMissing,
+      Severity: Error,
+      Message: The return statement has to return variable with name 'output'
+    }
+  ]
+}

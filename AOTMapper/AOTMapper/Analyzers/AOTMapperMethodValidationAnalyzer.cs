@@ -46,16 +46,10 @@ namespace AOTMapper.Analyzers
             }
 
             var parameters = methodSymbol.Parameters;
-            if (parameters.Length != 2)
-            {
-                context.ReportDiagnostic(
-                    Diagnostic.Create(
-                        AOTMapperDescriptors.AOTMapperMethodWrongDeclaration,
-                        method.Identifier.GetLocation()));
-                return;
-            }
 
-            if (parameters.First().Type.ToGlobalName() != "global::AOTMapper.IAOTMapper")
+            var isValidSignature = IsValidSignature(methodSymbol, parameters);
+
+            if (!isValidSignature)
             {
                 context.ReportDiagnostic(
                     Diagnostic.Create(
@@ -72,6 +66,31 @@ namespace AOTMapper.Analyzers
                         method.Identifier.GetLocation()));
                 return;
             }
+        }
+
+        private static bool IsValidSignature(IMethodSymbol methodSymbol, ImmutableArray<IParameterSymbol> parameters)
+        {
+            const string aotMapperType = "global::AOTMapper.IAOTMapper";
+
+            if (!methodSymbol.IsExtensionMethod)
+            {
+                return false;
+            }
+
+            var firstParamType = parameters.First().Type.ToGlobalName();
+            var hasTwoParameters = parameters.Length == 2; 
+
+            if (firstParamType == aotMapperType && hasTwoParameters)
+            {
+                return true; // (IAOTMapper, T) => R
+            }
+
+            if (firstParamType == aotMapperType)
+            {
+                return false; // (IAOTMapper, <any this>) => R
+            }
+
+            return true;
         }
     }
 }
